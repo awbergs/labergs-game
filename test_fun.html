@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    <style>
+      @font-face {
+        font-family: toySoldier;
+        src: url('toy-soldiers/TOYSOLDIERS.ttf');
+      }
+      body { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #ddd; }
+      #text {
+        font-family: toySoldier;
+        color: yellow;
+        font-size: 82px;
+        display: block;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id='text'>Hero's Destiny</h1>
+    <button id='move'>Move</button>
+    <script>
+      function getHex(){
+        return "#" + Math.random().toString(16).slice(2, 8);
+      }
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      var names = ['Canyon', 'Harper', 'Hudson'];
+      var colors = ['green', 'yellow', 'red'];
+
+      var $text = $("#text");
+
+      $(function(){
+        $("body").on('click', function(){
+          var color = colors[getRandomInt(0, 2)];
+          $text.css({color: color});
+          // var name = names[getRandomInt(0,2)]
+          // $("#text span").text();
+          // $("#text").animate({left: 1000}, {duration: 500})
+        });
+        $("body").on('mousemove', function(){
+          $text.css({color: getHex()});
+        })
+        $("#move").on('click', function(){
+
+        })
+      });
+    </script>
+  </body>
+</html>

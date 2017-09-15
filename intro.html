@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    <link href='css.css' rel='stylesheet' />
+  </head>
+  <body id='intro-body'>
+    <h1 id='title'>Hero's Destiny</h1>
+    <a id='start' href='game.html'>Play</a>
+    <script>
+      function getHex(){
+        return "#" + Math.random().toString(16).slice(2, 8);
+      }
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      var theList = ['Canyon', 'Harper', 'Hudson'];
+      var colors = ['green', 'yellow', 'red'];
+
+      var $text = $("#title");
+
+      $(function(){
+        $(document).on('mousemove', function(){
+          $text.css({color: getHex()});
+        })
+      });
+    </script>
+  </body>
+</html>

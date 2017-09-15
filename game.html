@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    <link href='css.css' rel='stylesheet' />
+  </head>
+  <body id='game-board'>
+    <div id='game'>
+      <div id='hero' class='left'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+       <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+       <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+       <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+       <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+      <div class='alien'></div>
+    </div>
+    <script>
+      var mKey = 109;
+      var aKey = 65;
+      var dKey = 68;
+      var wKey = 87;
+      var sKey = 83;
+      var pathUrl = 'images/path.png';
+
+      // left: 10600px;
+      // top: 10200px;
+
+      var path = [1,1,2,2,2,1,1,1,1,4,4,4,1,1,1,1,2,2,2,2,2,2,3,3,3,3,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,4,1,1,1,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,2,2,3,3,4,4,4,4,4,4,4,4,];
+
+      var path2 = [3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4];
+
+      var $gameBoard = $("#game-board");
+      var $landscape = $("#game");
+
+      drawPath(10600, 10200, path);
+      drawPath(10600, 10300, path2);
+
+      var width = $gameBoard.outerWidth();
+      var height = $gameBoard.outerHeight();
+
+      var $hero = $("#hero");
+
+      var coords = {left: 10000 + (width / 2) - ($hero.outerWidth() / 2), top: 10000 + (height / 2) - ($hero.outerHeight() / 2)};
+      $hero.css(coords);
+
+      $(".alien").each(function(){
+        var $this = $(this);
+
+        var rand = Math.random() * 10000;
+
+        var dir1 = Math.random() > .5 ? 1 : -1;
+        var dir2 = Math.random() > .5 ? 1 : -1;
+
+        $this.css({top: coords.top + (dir1 * rand), left: coords.left + (dir2 * rand)})
+      });
+
+      var attackTimeout = null;
+      $(document).on({
+        'keypress': function(e){
+          var key = e.which;
+          if(key === mKey && !attackTimeout){
+            attackTimeout = attack();
+          }
+        },
+        'keydown': function(e){
+          var key = e.which;
+          if(isMoveKey(key)){
+            $hero.addClass('walk');
+          }
+          if(key === aKey) {
+            $hero.removeClass('right').addClass('left');
+            move(5, 0);
+          }
+          else if(key === dKey) {
+            $hero.removeClass('left').addClass('right');
+            move(-5, 0);
+          }
+          else if (key === wKey) {
+            move(0, 5);
+          }
+          else if (key === sKey) {
+            move(0, -5);
+          }
+        },
+        'keyup': function(e){
+          var key = e.which;
+          if(isMoveKey(key)) {
+            $hero.removeClass('walk');
+          }
+        }
+      });
+
+      function attack(){
+        $hero.addClass('attack');
+        return setTimeout(function(){
+          $hero.removeClass('attack');
+          attackTimeout = null;
+        }, 200);
+      }
+      function move(x, y){
+        x = x * 2;
+        y = y * 2;
+        $landscape.css('left', $landscape.position().left + x);
+        $hero.css('left', $hero.position().left - x);
+
+        $landscape.css('top', $landscape.position().top + y);
+        $hero.css('top', $hero.position().top - y);
+      }
+      function isMoveKey(key){
+        return key == aKey || key == dKey;
+      }
+      function drawPath(x, y, path){
+        for(var i = 0; i < path.length; i ++){
+          var dd = path[i];
+          var $img = $('<img src="'+pathUrl+'" class="path" />');
+          $landscape.append($img);
+          $img.css({left: x, top: y});
+          if(dd == 1){
+            y -= 100;
+          }
+          else if(dd == 2){
+            x += 100;
+          }
+          else if(dd == 3){
+            y += 100;
+          }
+          else if(dd == 4){
+            x -= 100;
+          }
+        }
+      }
+
+      var alienSpeed = 60;
+
+      setInterval(function(){
+        var heroPosition = $hero.position();
+        $(".alien").each(function(){
+          var $this = $(this);
+
+          var alienPosition = $this.position();
+
+          if(heroPosition.top > alienPosition.top){
+            $this.css({top: "+=" + alienSpeed})
+          }
+          else if(heroPosition.top < alienPosition.top){
+            $this.css({top: "-=" + alienSpeed})
+          }
+          if(heroPosition.left > alienPosition.left){
+            $this.css({left: "+=" + alienSpeed})
+          }
+          else if(heroPosition.left < alienPosition.left){
+            $this.css({left: "-=" + alienSpeed})
+          }
+        });
+      },500)
+    </script>
+  </body>
+</html>
